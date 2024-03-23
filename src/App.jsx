@@ -4,37 +4,6 @@ import Options from "./components/Options/Options";
 import Notification from "./components/Notification/Notification";
 import "./App.css";
 
-// function App() {
-//   const [feedback, setFeedback] = useState({ good: 0, neutral: 0, bad: 0 });
-
-//   const updateFeedback = (feedbackType) => {
-//     setFeedback((prevFeedback) => ({
-//       ...prevFeedback,
-//       [feedbackType]: prevFeedback[feedbackType] + 1,
-//     }));
-//   };
-
-//   const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
-
-//   return (
-//     <div>
-//       <h1>Sip Happens Café</h1>
-//       <p>
-//         Please leave your feedback about our service by selecting one of the
-//         options below.
-//       </p>
-//       <Options updateFeedback={updateFeedback} />
-//       {totalFeedback > 0 ? (
-//         <Feedback feedback={feedback} totalFeedback={totalFeedback} />
-//       ) : (
-//         <Notification />
-//       )}
-//     </div>
-//   );
-// }
-
-// export default App;
-
 const App = () => {
   const initialFeedbackState = {
     good: 0,
@@ -43,6 +12,7 @@ const App = () => {
   };
 
   const [feedback, setFeedback] = useState(initialFeedbackState);
+  const [positivePercentage, setPositivePercentage] = useState(0);
 
   // Ефект для збереження стану feedback у локальному сховищі
   useEffect(() => {
@@ -55,6 +25,9 @@ const App = () => {
   // Ефект для збереження стану feedback у локальному сховищі при зміні
   useEffect(() => {
     localStorage.setItem("feedback", JSON.stringify(feedback));
+    const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+    const percentage = Math.round((feedback.good / totalFeedback) * 100);
+    setPositivePercentage(isNaN(percentage) ? 0 : percentage);
   }, [feedback]);
 
   const updateFeedback = (feedbackType) => {
@@ -83,7 +56,11 @@ const App = () => {
         totalFeedback={totalFeedback}
       />
       {totalFeedback > 0 ? (
-        <Feedback feedback={feedback} totalFeedback={totalFeedback} />
+        <Feedback
+          feedback={feedback}
+          totalFeedback={totalFeedback}
+          positivePercentage={positivePercentage}
+        />
       ) : (
         <Notification message="No feedback given yet." />
       )}
