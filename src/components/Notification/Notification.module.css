@@ -1,0 +1,12 @@
+.container {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffccbc;
+  border-radius: 5px;
+}
+
+.message {
+  font-size: 18px;
+  color: #d32f2f;
+}
